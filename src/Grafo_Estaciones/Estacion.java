@@ -13,10 +13,14 @@ public class Estacion {
 	}
 	
 	public int getEstacionByname(String name) {
-		if(name.equals(this.getNombre())) {
-			return this.getCodigo();
-		}else return -1;
+		String valueSearch = name.toUpperCase();
+		return valueSearch.equals(this.getNombre()) ? this.getCodigo(): -1;
 	}
+	
+	public String getNameById(int n) {		
+		return this.codigo == n ? this.nombre:  null;
+	}
+	
 	public int getCodigo() {
 		return codigo;
 	}
