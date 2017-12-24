@@ -10,13 +10,16 @@ import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.SingleGraph;
 
 public class GrafoEstaciones {
-	public void CrearGrafo() throws IOException {
-		ArrayList<Estacion> list = new ArrayList<Estacion>();
+	private ArrayList<Estacion> list;
+	private ArrayList<String> Nombres;
+	public void CrearNodoEstacion() throws IOException {
+		list = new ArrayList<Estacion>();
+		Nombres = new ArrayList<String>();
 		BufferedReader br =null;
 		Estacion estacion = null;
 		Graph graph = new SingleGraph("Grafo");
 		try {
-		 br=new BufferedReader(new FileReader("/Proyecto_Metro_Madrid/src/DataCSV/M4_Estaciones.csv"));
+		 br=new BufferedReader(new FileReader("/home/ermc/git/Proyecto_Final/src/DataCSV/M4_Estaciones.csv"));
 		String line = br.readLine();
 	    do {
 		       String [] fields = line.split(",");
@@ -26,6 +29,7 @@ public class GrafoEstaciones {
 			       estacion = new Estacion(Integer.parseInt(fields[0]), fields[1], Integer.parseInt(fields[3]),Integer.parseInt(fields[4]));
 			       list.add(estacion);
 			       graph.addNode(fields[0]);
+			       Nombres.add(fields[1]);
 		       }
 		       
 		       }while((line = br.readLine()) != null);
@@ -42,4 +46,9 @@ public class GrafoEstaciones {
 		
 		}//Aqui se conectaran los nodos o Estaciones
 	}
+	
+	public String[] getEstacionesName() {
+		return  Nombres.toArray(new String[Nombres.size()]);		
+	}
+	
 }
