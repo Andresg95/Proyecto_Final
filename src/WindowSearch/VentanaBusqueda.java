@@ -45,7 +45,7 @@ public class VentanaBusqueda extends JFrame implements ActionListener{
         scrollPane.setViewportView(lista);
         // configuramos los componentes
         scrollPane.setBounds(10, 10, 150, 800); //Colocamosposicion y tamanio a donde se colocara la lista de estaciones
-        boton.setText("Mostrar Mensaje");   // colocamos un texto al boton
+        boton.setText("Buscar Ruta");   // colocamos un texto al boton
         boton.setBounds(100, 850, 200, 30);  // colocamos posicion y tamanio al boton (x, y, ancho, alto)
         boton.addActionListener(this);      // hacemos que el boton tenga una accion y esa accion estara en esta clase
         // adicionamos los componentes a la ventana
