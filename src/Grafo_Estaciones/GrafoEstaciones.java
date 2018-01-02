@@ -29,7 +29,7 @@ public class GrafoEstaciones {
 			       estacion = new Estacion(Integer.parseInt(fields[0]), fields[1], Integer.parseInt(fields[3]),Integer.parseInt(fields[4]));
 			       list.add(estacion);
 			       graph.addNode(fields[0]);
-			       Nombres.add(fields[1]);
+			       Nombres.add(Integer.parseInt(fields[0])+" - "+fields[1]);
 		       }
 		       
 		       }while((line = br.readLine()) != null);
@@ -50,5 +50,7 @@ public class GrafoEstaciones {
 	public String[] getEstacionesName() {
 		return  Nombres.toArray(new String[Nombres.size()]);		
 	}
+	
+	
 	
 }
