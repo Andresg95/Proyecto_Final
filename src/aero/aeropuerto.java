@@ -1,39 +1,22 @@
 package aero;
 
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class aeropuerto {
 	private int id;
 	private String name, city, country, iata, icao;
 	private Float lat, lng;
 
-	public aeropuerto(String line) {
+	public aeropuerto(int id,String name,String city,String country,String iata,String icao,Float lat, Float lng) {
 
-		final Pattern pattern = Pattern.compile("\"");
-		final Matcher matcher = pattern.matcher(line);
-		line = matcher.replaceAll("");
+		
+		this.id = id;
+		this.name = name;
+		this.city = city;
+		this.country = country;
+		this.iata = iata;
+		this.icao = icao;
 
-		Object[] airportinfo = line.split(",");
-
-		this.id = Integer.parseInt(airportinfo[0].toString());
-		this.name = (String) airportinfo[1];
-		this.city = (String) airportinfo[2];
-		this.country = (String) airportinfo[3];
-		this.iata = (String) airportinfo[4];
-		this.icao = (String) airportinfo[5];
-
-		this.lat = this.validFloat(airportinfo[6].toString());
-		this.lng = this.validFloat(airportinfo[7].toString());
-	}
-
-	private Float validFloat(String s) {
-		if (s.matches("[-+]?[0-9]*\\.?[0-9]+")) {
-			return Float.parseFloat(s);
-		} else {
-			return 0.0f;
-		}
+		this.lat = lat;
+		this.lng = lng;
 	}
 
 	public String toString() {

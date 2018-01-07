@@ -1,6 +1,5 @@
 package aero;
 
-import java.util.ArrayList;
 
 public class rutas {
 
@@ -8,34 +7,23 @@ public class rutas {
 
 	private int airlineID, origenID, destinoID, paradas;
 
-	//private Float distance = 0.0f;
+	//private Float distance = 0.0f; 
 
-	rutas(String r) {
+	rutas(String airline,int airlineID, String origen,int origenID,String destino, int destinoID,String codeshare,int paradas) {
 
-		Object[] infoRuta = r.split(",");
-		this.airline = (String) infoRuta[0];
-		this.airlineID = this.validString(infoRuta[1].toString());
-		this.origen = (String) infoRuta[2];
-		this.origenID = this.validString(infoRuta[3].toString());
-		this.destino = (String) infoRuta[4];
-		this.destinoID = this.validString(infoRuta[5].toString());
-		this.codeshare = infoRuta[6].toString();
+		this.airline = airline;
+		this.airlineID = airlineID;
+		this.origen = origen;
+		this.origenID =origenID;
+		this.destino = destino;
+		this.destinoID = destinoID;
+		this.codeshare = codeshare;
 
-		this.paradas = this.validString(infoRuta[7].toString());
+		this.paradas = paradas;
 		// this.equipamento = infoRuta[8].toString();
 		//this.distance = Utils.getDistanceBetween(this.getOrigenID(), this.getDestinoID());
 		
 		
-	}
-
-	private int validString(String s) {
-
-		if (s.equals("\\N")) {
-			return 0;
-		} else {
-			return Integer.parseInt(s);
-		}
-
 	}
 
 	/*public Float getDistance() {

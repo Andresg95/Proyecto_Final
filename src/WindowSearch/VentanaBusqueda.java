@@ -13,12 +13,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import Grafo_Estaciones.GrafoEstaciones;
+import aero.Creador;
 
 
 public class VentanaBusqueda extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 3029161281030070160L;
 	private GrafoEstaciones grafo;
+	private Creador Airports;
 	private JList<Object> listaOrigen,listaDestino;
     private JButton boton,botonR,botonM;          	// boton para la ruta mas corta entre estaciones ->boton
     												// boton para todas las rutas entre las estaciones ->botonR
@@ -26,8 +28,11 @@ public class VentanaBusqueda extends JFrame implements ActionListener{
 	private String destino,origen;
 	private JLabel destinoL,origenL;
     
-	public VentanaBusqueda() throws IOException {
+	@SuppressWarnings("static-access")
+	public VentanaBusqueda() throws Exception {
 		super();
+		Airports = new Creador();
+		Airports.fetchData();
 		grafo=new GrafoEstaciones();
 		grafo.CrearNodoEstacion();
 		configurarVentana();        // configuramos la ventana

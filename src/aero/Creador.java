@@ -5,20 +5,29 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.awt.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.MultiGraph;
+
 
 public class Creador {
 
 	public static ArrayList<aeropuerto> airports = null;
 	public static ArrayList<rutas> routes = null;
+	private static ArrayList<String> nombres = null;
+	private static Graph graph;
 
 	public static boolean fetchData() throws Exception {
+		graph = new MultiGraph("Grafo");
 		if (airports == null) {
 			airports = getAirports(false, 0);
 		}
 		if (routes == null) {
 			routes = getRoutes(false, 0);
 		}
+		graph.display();
 		return true;
 	}
 
@@ -96,14 +105,46 @@ public class Creador {
 			if (lim && limit == maxlimit) {
 				break;
 			}
-			airportList.add(new aeropuerto(inputLine));
-			// System.out.println(inputLine);
+			final Pattern pattern = Pattern.compile("\"");
+			final Matcher matcher = pattern.matcher(inputLine);
+			inputLine = matcher.replaceAll("");
+
+			Object[] airportinfo = inputLine.split(",");
+			int id = Integer.parseInt(airportinfo[0].toString());
+			String name = (String) airportinfo[1];
+			String city = (String) airportinfo[2];
+			String country = (String) airportinfo[3];
+			String iata = (String) airportinfo[4];
+			String icao = (String) airportinfo[5];
+
+			Float lat = validFloat(airportinfo[6].toString());
+			Float lng = validFloat(airportinfo[7].toString());
+			airportList.add(new aeropuerto(id,name,city,country,iata,icao,lat,lng));
+			
+			if(!airportinfo[4].equals("\\N")) graph.addNode((String)airportinfo[4]);
+			//System.out.println(inputLine);
+			/*if(airportinfo[1]!=null && !lim && limit <= maxlimit && airportinfo.length>7) {
+				System.out.println(name);
+				nombres.add((String) airportinfo[1]);	
+			}*/
 			limit++;
 		}
 
 		in.close();
 		return airportList;
 
+	}
+	
+	public String[] getAirports() {
+		return  nombres.toArray(new String[nombres.size()]);		
+	}
+	
+	private static Float validFloat(String s) {
+		if (s.matches("[-+]?[0-9]*\\.?[0-9]+")) {
+			return Float.parseFloat(s);
+		} else {
+			return 0.0f;
+		}
 	}
 
 	public static ArrayList<rutas> getRoutes(boolean lim, int maxlimit) throws Exception {
@@ -118,14 +159,36 @@ public class Creador {
 			if (lim && limit == maxlimit) {
 				break;
 			}
-			everyRoute.add(new rutas(inputLine));
-			// System.out.println(inputLine);
+			Object[] infoRuta = inputLine.split(",");
+			String airline = (String) infoRuta[0];
+			int airlineID = validString(infoRuta[1].toString());
+			String origen = (String) infoRuta[2];
+			int origenID = validString(infoRuta[3].toString());
+			String destino = (String) infoRuta[4];
+			int destinoID = validString(infoRuta[5].toString());
+			String codeshare = infoRuta[6].toString();
+			int paradas = validString(infoRuta[7].toString());			
+			
+			everyRoute.add(new rutas( airline, airlineID,  origen, origenID, destino,  destinoID, codeshare, paradas));
+			
+			if(!origen.equals("\\N") && !destino.equals("\\N") && graph.getEdge(destino+destino)==null)
+				graph.addEdge(origen+destino,origen , destino);
 			limit++;
 		}
 
 		in.close();
 
 		return everyRoute;
+	}
+	
+	private static int validString(String s) {
+
+		if (s.equals("\\N")) {
+			return 0;
+		} else {
+			return Integer.parseInt(s);
+		}
+
 	}
 
 }
