@@ -121,7 +121,7 @@ public class Creador {
 			Float lng = validFloat(airportinfo[7].toString());
 			airportList.add(new aeropuerto(id,name,city,country,iata,icao,lat,lng));
 			
-			if(!airportinfo[4].equals("\\N")) graph.addNode((String)airportinfo[4]);
+			if(!airportinfo[0].toString().equals("\\N") && graph.getNode(airportinfo[0].toString())==null) graph.addNode(airportinfo[0].toString());
 			//System.out.println(inputLine);
 			/*if(airportinfo[1]!=null && !lim && limit <= maxlimit && airportinfo.length>7) {
 				System.out.println(name);
@@ -171,8 +171,8 @@ public class Creador {
 			
 			everyRoute.add(new rutas( airline, airlineID,  origen, origenID, destino,  destinoID, codeshare, paradas));
 			
-			if(!origen.equals("\\N") && !destino.equals("\\N") && graph.getEdge(destino+destino)==null)
-				graph.addEdge(origen+destino,origen , destino);
+			if(!infoRuta[3].toString().equals("\\N") && !infoRuta[5].toString().equals("\\N") && graph.getEdge(origenID+destinoID)==null)
+				graph.addEdge(infoRuta[3].toString()+infoRuta[5].toString() ,infoRuta[3].toString(),infoRuta[5].toString());
 			limit++;
 		}
 
