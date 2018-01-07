@@ -27,7 +27,7 @@ public class Creador {
 		if (routes == null) {
 			routes = getRoutes(false, 0);
 		}
-		graph.display();
+		
 		return true;
 	}
 
@@ -179,6 +179,10 @@ public class Creador {
 		in.close();
 
 		return everyRoute;
+	}
+	
+	public void viewAll() {
+		graph.display();
 	}
 	
 	private static int validString(String s) {

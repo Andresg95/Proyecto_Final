@@ -50,7 +50,8 @@ public class VentanaBusqueda extends JFrame implements ActionListener{
 			JOptionPane.showMessageDialog(null, "Mostrar todas las rutas entre las estaciones: "+origen+" y "+destino);
 			break;
 		case "Mapa":
-			JOptionPane.showMessageDialog(null, "Mostrar el mapa");
+			Airports.viewAll();
+			//JOptionPane.showMessageDialog(null, "Mostrar el mapa");
 			break;
 
 		default:
