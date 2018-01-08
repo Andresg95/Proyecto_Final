@@ -2,24 +2,37 @@ package aero;
 
 
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.graphstream.algorithm.Dijkstra;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.Path;
 import org.graphstream.graph.implementations.MultiGraph;
+
+import Grafo_Estaciones.Estacion;
 
 
 public class Creador {
 
 	public static ArrayList<aeropuerto> airports = null;
 	public static ArrayList<rutas> routes = null;
-	private static ArrayList<String> nombres = null;
+	private static ArrayList<String> nombres;
 	private static Graph graph;
 
 	public static boolean fetchData() throws Exception {
+		nombres = new ArrayList<String>();
 		graph = new MultiGraph("Grafo");
 		if (airports == null) {
 			airports = getAirports(false, 0);
@@ -39,6 +52,16 @@ public class Creador {
 		}
 		return null;
 	}
+	
+	public static aeropuerto findOneByName(String name) {
+		for (aeropuerto airport : airports) {
+			if (airport.getName().equals(name)) {
+				return airport;
+			}
+		}
+		return null;
+	}
+	
 
 	// @returns Distance in Meters
 	public static Float getDistanceBetween(int origin, int destination) {
@@ -98,7 +121,7 @@ public class Creador {
 
 		URL oracle = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat");
 		BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
-
+		//BufferedReader in = new BufferedReader(new FileReader("/home/ermc/git/Proyecto_Final/src/DataCSV/Aeropuertos"));
 		String inputLine;
 		int limit = 0;
 		while ((inputLine = in.readLine()) != null) {
@@ -121,12 +144,11 @@ public class Creador {
 			Float lng = validFloat(airportinfo[7].toString());
 			airportList.add(new aeropuerto(id,name,city,country,iata,icao,lat,lng));
 			
-			if(!airportinfo[0].toString().equals("\\N") && graph.getNode(airportinfo[0].toString())==null) graph.addNode(airportinfo[0].toString());
-			//System.out.println(inputLine);
-			/*if(airportinfo[1]!=null && !lim && limit <= maxlimit && airportinfo.length>7) {
-				System.out.println(name);
-				nombres.add((String) airportinfo[1]);	
-			}*/
+			if(!airportinfo[0].toString().equals("\\N") && !airportinfo[1].toString().equals("\\N") && graph.getNode((String)airportinfo[0])==null) {
+				graph.addNode((String)airportinfo[0]).addAttribute("xy", lng,lat);;
+				nombres.add(name);
+			}
+
 			limit++;
 		}
 
@@ -151,7 +173,7 @@ public class Creador {
 
 		URL oracle = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat");
 		BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
-
+		//BufferedReader in = new BufferedReader(new FileReader("/home/ermc/git/Proyecto_Final/src/DataCSV/Rutas"));
 		ArrayList<rutas> everyRoute = new ArrayList<rutas>();
 		String inputLine;
 		int limit = 0;
@@ -171,18 +193,14 @@ public class Creador {
 			
 			everyRoute.add(new rutas( airline, airlineID,  origen, origenID, destino,  destinoID, codeshare, paradas));
 			
-			if(!infoRuta[3].toString().equals("\\N") && !infoRuta[5].toString().equals("\\N") && graph.getEdge(origenID+destinoID)==null)
-				graph.addEdge(infoRuta[3].toString()+infoRuta[5].toString() ,infoRuta[3].toString(),infoRuta[5].toString());
+			if(!infoRuta[3].toString().equals("\\N") && !infoRuta[5].toString().equals("\\N") && graph.getEdge((String)infoRuta[3]+(String)infoRuta[5])==null && graph.getNode((String)infoRuta[3])!=null &&graph.getNode((String)infoRuta[5])!=null)
+				graph.addEdge(infoRuta[3].toString()+infoRuta[5].toString() ,infoRuta[3].toString(),infoRuta[5].toString()).addAttribute("length", getDistanceBetween(origenID,destinoID));
 			limit++;
 		}
 
 		in.close();
 
 		return everyRoute;
-	}
-	
-	public void viewAll() {
-		graph.display();
 	}
 	
 	private static int validString(String s) {
@@ -194,5 +212,43 @@ public class Creador {
 		}
 
 	}
+	
+	public void viewAll() {
+		graph.display();
+	}
+	
+	public void rutaCorta(String origen,String destino) throws IOException {
+		BufferedReader br=null;
+		aeropuerto origenA = findOneByName(origen);
+		aeropuerto destinoA =findOneByName(destino);
+		Dijkstra dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "length");
+		// Compute the shortest paths in g from A to all nodes
+		dijkstra.init(graph);
+		dijkstra.setSource(graph.getNode(String.valueOf(origenA.getId())));
+		dijkstra.compute();
+		graph.display(false);
+		for (Node node : graph)
+			System.out.printf("%s->%s:%10.2f%n", dijkstra.getSource(), node,
+					dijkstra.getPathLength(node));
+		
+		for (Node node : dijkstra.getPathNodes(graph.getNode(String.valueOf(destinoA.getId()))))
+			node.addAttribute("ui.style", "fill-color: yellow;");
+
+		// Color in red all the edges in the shortest path tree
+		for (Edge edge : dijkstra.getTreeEdges())
+			edge.addAttribute("ui.style", "fill-color: green;");
+		
+		System.out.println(dijkstra.getPath(graph.getNode(String.valueOf(destinoA.getId()))));
+
+		// Build a list containing the nodes in the shortest path from A to B
+		// Note that nodes are added at the beginning of the list
+		// because the iterator traverses them in reverse order, from B to A
+		List<Node> list1 = new ArrayList<Node>();
+		for (Node node : dijkstra.getPathNodes(graph.getNode(String.valueOf(destinoA.getId()))))
+			list1.add(0, node);		
+			
+	}
+	
+	
 
 }

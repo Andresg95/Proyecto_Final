@@ -19,7 +19,6 @@ import aero.Creador;
 public class VentanaBusqueda extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 3029161281030070160L;
-	private GrafoEstaciones grafo;
 	private Creador Airports;
 	private JList<Object> listaOrigen,listaDestino;
     private JButton boton,botonR,botonM;          	// boton para la ruta mas corta entre estaciones ->boton
@@ -33,10 +32,8 @@ public class VentanaBusqueda extends JFrame implements ActionListener{
 		super();
 		Airports = new Creador();
 		Airports.fetchData();
-		grafo=new GrafoEstaciones();
-		grafo.CrearNodoEstacion();
 		configurarVentana();        // configuramos la ventana
-        inicializarComponentes(grafo.getEstacionesName());  
+        inicializarComponentes(Airports.getAirports());  
 	} 
 	
 	@Override
@@ -44,7 +41,13 @@ public class VentanaBusqueda extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		switch (e.getActionCommand()) {
 		case "Corta":
-			JOptionPane.showMessageDialog(null, "Mostrar ruta mas corta entre: "+origen+" y "+destino);
+			try {
+				Airports.rutaCorta(origenL.getText(),destinoL.getText());
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//JOptionPane.showMessageDialog(null, "Mostrar ruta mas corta entre: "+origen+" y "+destino);
 			break;
 		case "Todas":
 			JOptionPane.showMessageDialog(null, "Mostrar todas las rutas entre las estaciones: "+origen+" y "+destino);
