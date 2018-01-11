@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,14 +108,14 @@ public class Creador {
 
 		return airportList;
 	}
-
+	
 	public static ArrayList<aeropuerto> getAirports(boolean lim, int maxlimit) throws Exception {
 
 		ArrayList<aeropuerto> airportList = new ArrayList<aeropuerto>();
 
-		URL oracle = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat");
-		BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
-		//BufferedReader in = new BufferedReader(new FileReader("/home/ermc/git/Proyecto_Final/src/DataCSV/Aeropuertos"));
+		/*URL oracle = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat");
+		BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));*/
+		BufferedReader in = new BufferedReader(new FileReader("/home/ermc/git/Proyecto_Final/src/DataCSV/Aeropuertos"));
 		String inputLine;
 		int limit = 0;
 		while ((inputLine = in.readLine()) != null) {
@@ -140,7 +139,10 @@ public class Creador {
 			airportList.add(new aeropuerto(id,name,city,country,iata,icao,lat,lng));
 			
 			if(!airportinfo[0].toString().equals("\\N") && !airportinfo[1].toString().equals("\\N") && graph.getNode((String)airportinfo[0])==null) {
-				graph.addNode((String)airportinfo[0]).addAttribute("xy", lng,lat);;
+				graph.addNode((String)airportinfo[0]).addAttribute("xy", lng,lat);
+				Node n = graph.getNode((String)airportinfo[0]);
+				n.addAttribute("ui.style", "fill-color: rgb(087,166,057);size:7px;");
+				n.addAttribute("layout.frozen");
 				nombres.add(name);
 			}
 
@@ -190,6 +192,7 @@ public class Creador {
 			
 			if(!infoRuta[3].toString().equals("\\N") && !infoRuta[5].toString().equals("\\N") && graph.getEdge((String)infoRuta[3]+(String)infoRuta[5])==null && graph.getNode((String)infoRuta[3])!=null &&graph.getNode((String)infoRuta[5])!=null)
 				graph.addEdge(infoRuta[3].toString()+infoRuta[5].toString() ,infoRuta[3].toString(),infoRuta[5].toString()).addAttribute("length", getDistanceBetween(origenID,destinoID));
+				
 			limit++;
 		}
 
@@ -213,7 +216,6 @@ public class Creador {
 	}
 	
 	public void rutaCorta(String origen,String destino) throws IOException {
-		BufferedReader br=null;
 		aeropuerto origenA = findOneByName(origen);
 		aeropuerto destinoA =findOneByName(destino);
 		Dijkstra dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "length");
@@ -242,8 +244,6 @@ public class Creador {
 		for (Node node : dijkstra.getPathNodes(graph.getNode(String.valueOf(destinoA.getId()))))
 			list1.add(0, node);		
 			
-	}
-	
-	
+	}	
 
 }
