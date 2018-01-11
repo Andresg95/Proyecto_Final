@@ -242,8 +242,8 @@ public class Creador {
 		// because the iterator traverses them in reverse order, from B to A
 		List<Node> list1 = new ArrayList<Node>();
 		for (Node node : dijkstra.getPathNodes(graph.getNode(String.valueOf(destinoA.getId()))))
-			list1.add(0, node);		
-			
-	}	
+			list1.add(0, node);	
+		}
+	
 
 }
