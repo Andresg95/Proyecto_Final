@@ -242,7 +242,7 @@ public class Creador {
 		    	
 		    	graphics2D.setColor(Color.green);
 		        graphics2D.drawString("hello", 10, 30);
-		        graphics2D.drawImage(img, 30,80,758,310 , null);
+		        graphics2D.drawImage(img, 30,80,1250,1025 , null);
 				
 			}
 		});
