@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -248,7 +247,6 @@ public class Creador {
 			}
 		});
 	Mundial.setResizable(false);
-	Mundial.pack();
 	Mundial.setBounds(650, 5, 1250, 1025); 
 	Mundial.add(view);
 	Mundial.setVisible(true);
@@ -260,13 +258,10 @@ public class Creador {
 		aeropuerto destinoA =findOneByName(destino);
 		Dijkstra dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "length");
 		// Compute the shortest paths in g from A to all nodes
+		
 		dijkstra.init(graph);
 		dijkstra.setSource(graph.getNode(String.valueOf(origenA.getId())));
 		dijkstra.compute();
-		graph.display(false);
-		for (Node node : graph)
-			System.out.printf("%s->%s:%10.2f%n", dijkstra.getSource(), node,
-					dijkstra.getPathLength(node));
 		
 		for (Node node : dijkstra.getPathNodes(graph.getNode(String.valueOf(destinoA.getId()))))
 			node.addAttribute("ui.style", "fill-color: yellow;");
@@ -274,15 +269,7 @@ public class Creador {
 		// Color in red all the edges in the shortest path tree
 		for (Edge edge : dijkstra.getTreeEdges())
 			edge.addAttribute("ui.style", "fill-color: green;");
-		
-		System.out.println(dijkstra.getPath(graph.getNode(String.valueOf(destinoA.getId()))));
-
-		// Build a list containing the nodes in the shortest path from A to B
-		// Note that nodes are added at the beginning of the list
-		// because the iterator traverses them in reverse order, from B to A
-		List<Node> list1 = new ArrayList<Node>();
-		for (Node node : dijkstra.getPathNodes(graph.getNode(String.valueOf(destinoA.getId()))))
-			list1.add(0, node);	
+		viewAll();
 		}
 	
 
