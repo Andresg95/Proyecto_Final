@@ -35,6 +35,7 @@ public class Creador {
 			routes = getRoutes(false, 0);
 		}
 		
+		graph.addAttribute("ui.stylesheet", "graph { fill-color: #66B2FF; }");
 		return true;
 	}
 
@@ -212,7 +213,33 @@ public class Creador {
 	}
 	
 	public void viewAll() {
-		graph.display();
+		JFrame Mundial = new JFrame("Mapa mundial de aeropuertos");
+		Viewer viewer = graph.display();
+		DefaultView view = (DefaultView) viewer.getDefaultView();
+		view.setBackLayerRenderer(new LayerRenderer() {
+		    @Override
+		    public void render(Graphics2D graphics2D, GraphicGraph  graphicGraph, double v, int i, int i1, double v1, double v2, double v3, double v4) {
+		    	
+		    	
+		    	BufferedImage img = null ;
+		    	try {
+		    	    img = ImageIO.read(getClass().getResourceAsStream("/mundo3.png"));
+		    	} catch (IOException e) {
+		    	}
+		    	
+		    	graphics2D.setColor(Color.green);
+		        graphics2D.drawString("hello", 10, 30);
+		        graphics2D.drawImage(img, 30,80,758,310 , null);
+		        
+		    }
+		});
+		Mundial.setBounds(570, 5, 1000, 1000);
+		Mundial.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+		Mundial.setResizable(false);
+		Mundial.pack();
+		Mundial.add(view);
+	
+		
 	}
 	
 	public void rutaCorta(String origen,String destino) throws IOException {
