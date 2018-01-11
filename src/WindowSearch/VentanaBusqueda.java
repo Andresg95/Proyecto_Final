@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -63,7 +64,7 @@ public class VentanaBusqueda extends JFrame implements ActionListener{
 	
 	private void configurarVentana() {
         this.setTitle("Metro Madrid");                   // colocamos titulo a la ventana
-        this.setBounds(5, 5, 638, 670);                // colocamos tamanio y posicion a la ventana (x , y , ancho, alto)        
+        this.setBounds(5, 5, 638, 1025);                // colocamos tamanio y posicion a la ventana (x , y , ancho, alto)        
         this.setLayout(null);                                   // no usamos ningun layout, solo asi podremos dar posiciones a los componentes
         this.setResizable(false);                               // hacemos que la ventana no sea redimiensionable
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    // hacemos que cuando se cierre la ventana termina todo proceso
@@ -95,11 +96,11 @@ public class VentanaBusqueda extends JFrame implements ActionListener{
         origenL.setBounds(70, 50, 238, 18);
         panelO.setBounds(10, 50, 50, 15);
         panelD.setBounds(328, 50, 50, 15);
-        boton.setBounds(380, 590, 200, 30);
-        botonR.setBounds(70, 590, 200, 30);
+        boton.setBounds(380, 950, 200, 30);
+        botonR.setBounds(70, 950, 200, 30);
         botonM.setBounds(240, 10, 200, 30);  
-        scrollPaneO.setBounds(70, 70, 238, 500); //Colocamosposicion y tamanio a donde se colocara la lista de estaciones
-        scrollPaneD.setBounds(380, 70, 238, 500);
+        scrollPaneO.setBounds(70, 70, 238, 875); //Colocamosposicion y tamanio a donde se colocara la lista de estaciones
+        scrollPaneD.setBounds(380, 70, 238, 875);
         boton.setEnabled(false); 				//Los botones de rutas no se habilitan hasta tener una estacion de origen y otra de ddestino
         botonR.setEnabled(false);
         boton.addActionListener(this);      // hacemos que el boton tenga una accion y esa accion estara en esta clase
@@ -124,6 +125,72 @@ public class VentanaBusqueda extends JFrame implements ActionListener{
     }
     
     private void JTextActions() {
+	destinoL.addMouseListener(new MouseListener() {
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					// TODO Auto-generated method stub
+					destinoL.setText("");
+				}
+	
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+	
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+	
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+	
+				@Override
+				public void mouseExited(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
+    	origenL.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				origenL.setText("");
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
     	origenL.getDocument().addDocumentListener(new DocumentListener() {
 			
     		@Override

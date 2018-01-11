@@ -1,6 +1,10 @@
 package aero;
 
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,11 +15,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+
 import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.graphicGraph.GraphicGraph;
+import org.graphstream.ui.swingViewer.DefaultView;
+import org.graphstream.ui.swingViewer.LayerRenderer;
+import org.graphstream.ui.view.Viewer;
 
 
 public class Creador {
@@ -214,13 +225,16 @@ public class Creador {
 	
 	public void viewAll() {
 		JFrame Mundial = new JFrame("Mapa mundial de aeropuertos");
-		Viewer viewer = graph.display();
-		DefaultView view = (DefaultView) viewer.getDefaultView();
+		Viewer viewer = new Viewer(graph,Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		
+		DefaultView view = (DefaultView) viewer.addDefaultView(false);
+		view.setPreferredSize(new Dimension(1250, 1025));
 		view.setBackLayerRenderer(new LayerRenderer() {
-		    @Override
-		    public void render(Graphics2D graphics2D, GraphicGraph  graphicGraph, double v, int i, int i1, double v1, double v2, double v3, double v4) {
-		    	
-		    	
+			@Override
+			public void render(Graphics2D graphics2D, GraphicGraph arg1, double arg2, int arg3, int arg4, double arg5,
+					double arg6, double arg7, double arg8) {
+				// TODO Auto-generated method stub
+
 		    	BufferedImage img = null ;
 		    	try {
 		    	    img = ImageIO.read(getClass().getResourceAsStream("/mundo3.png"));
@@ -230,15 +244,13 @@ public class Creador {
 		    	graphics2D.setColor(Color.green);
 		        graphics2D.drawString("hello", 10, 30);
 		        graphics2D.drawImage(img, 30,80,758,310 , null);
-		        
-		    }
+				
+			}
 		});
-		Mundial.setBounds(570, 5, 1000, 1000);
-		Mundial.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-		Mundial.setResizable(false);
-		Mundial.pack();
-		Mundial.add(view);
-	
+		
+	Mundial.setBounds(650, 5, 1250, 1025); 
+	Mundial.add(view);
+	Mundial.setVisible(true);
 		
 	}
 	
