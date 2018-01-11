@@ -247,7 +247,8 @@ public class Creador {
 				
 			}
 		});
-		
+	Mundial.setResizable(false);
+	Mundial.pack();
 	Mundial.setBounds(650, 5, 1250, 1025); 
 	Mundial.add(view);
 	Mundial.setVisible(true);
